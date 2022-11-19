@@ -1,15 +1,18 @@
 <template>
+    <div>
         <h1 class="text-3xl">Recipe List</h1>
         <div class="w-10/12 flex flex-col items-center md:grid md:grid-cols-3 gap-y-5 place-items-center">
             
-            <RecipeCardSmall v-for="recipe in recipes" :id="recipe.id" :recipe="recipe" />         
+            <RecipeCardSmall v-for="recipe in recipes" :key="recipe.id" :recipe="recipe" />         
         </div>
+    </div>
+        
     
     
 </template>
 
 <script>
-    import RecipeCardSmall from './RecipeCardSmall.vue'
+    import RecipeCardSmall from '../components/RecipeCardSmall.vue'
 
     export default {
 

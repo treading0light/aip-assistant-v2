@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import Home from '../components/Home.vue'
+import Home from '../pages/Home.vue'
 import NewRecipeForm from '../components/NewRecipeForm.vue'
-import RecipeList from '../components/RecipeList.vue'
+import RecipeList from '../pages/RecipeList.vue'
 import RecipeCardLarge from '../components/RecipeCardLarge.vue'
 
 

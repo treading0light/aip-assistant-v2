@@ -76,20 +76,36 @@ class RecipeController extends Controller
 
     public function getRecipe(Request $request, $id=null) {
 
-        if (!$id) {
-            $recipe = Recipe::all();
-        } else {
-            $recipe = Recipe::find($id);
+        try {
+                if (!$id) {
+                    $res = Recipe::all();
+                } else {
+                    $res = collect(Recipe::with('ingredients')->find($id));
+
+                    $ingredients = [];
+
+                    // move pivot data up from nested in array.
+                    foreach ($res['ingredients'] as $ingredient) {
+
+                        $pivot = $ingredient['pivot'];
+                        unset($ingredient['pivot']);
+
+                        $ingredient['qty'] = $pivot['qty'];
+                        $ingredient['unit'] = $pivot['unit'];
+
+                        array_push($ingredients, $ingredient);
+                    }
+
+                    $res->put('ingredients', $ingredients);
+                }
+        } catch (Throwable $e)  {
+                $message = $e->getMessage();
+
+                return json_encode($message);
         }
 
-        // $recipe = Recipe::find($request->id);
+        return response($res);
         
-
-        // $jsonRecipe = $recipe->toJson();
-
-        // dd($jsonRecipe);
-
-        return response()->json($recipe);
     }
 
     public function populate() {

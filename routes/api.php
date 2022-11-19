@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\IngredientController;
+use App\Http\Controllers\UserController;
 
 
 /*
@@ -17,6 +18,12 @@ use App\Http\Controllers\IngredientController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::post('/login', [UserController::class, 'login']
+)->name('login');
+
+Route::post('/register', [UserController::class, 'register']
+)->name('register');
 
 Route::post('/recipe/create', [RecipeController::class, 'create'])->name('recipe.create');
 

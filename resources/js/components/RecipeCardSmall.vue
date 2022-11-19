@@ -1,10 +1,4 @@
-<template>
-	<!-- <div class="flex flex-col items-center bg-gray-200 gap-1">
-		<h1 class="text-2xl">{{ recipe.title }}</h1>
-		<img :src="recipe.image">
-		<button>{{ buttonText }}</button>
-
-	</div> -->
+<template>	
 
 	<div class="card w-4/5 bg-base-100 shadow-xl">
 	  <figure class="px-10 pt-10">
@@ -17,7 +11,6 @@
 	    </div>
 	  </div>
 	</div>
-	<!-- <h1>Goodbye World</h1> -->
 
 </template>
 

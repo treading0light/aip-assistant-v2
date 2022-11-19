@@ -8,6 +8,8 @@
     <div class="flex justify-end flex-1 px-2">
       <div class="flex items-stretch">
 
+        <button @click="toggleLogin" class="btn btn-ghost rounded-btn text-primary-content">LOGIN</button>
+
         <router-link to="/" class="btn btn-ghost rounded-btn text-primary-content">HOME</router-link>
 
         <div id="dropdown" class="dropdown dropdown-end">
@@ -21,10 +23,21 @@
 
       </div>
     </div>
+
+    <LoginModal v-if="showLogin" />
   </div>
 	
 </template>
 
 <script setup>
+  import { ref } from 'vue'
+  import LoginModal from './LoginModal.vue'
+
+  const showLogin = ref(false)
+
+  const toggleLogin = () => {
+    if (showLogin.value == false) showLogin.value = true
+    else showLogin.value = false
+  }
 
 </script>
