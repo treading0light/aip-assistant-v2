@@ -21,16 +21,14 @@
 	import { useRoute } from 'vue-router'
 	import { ref, onMounted, onBeforeMount } from 'vue'
 
-	const recipe = ref(null)
-	const ingredients = ref(null)
+	const recipe = ref({})
+	const ingredients = ref({})
 
 	const getRecipe = async (id) => {
 		const res = await fetch('/api/recipe/' + id)
 		.catch(err => console.error(err))
 
 		const data = await res.json()
-
-		console.log(data)
 		return data
 	}
 
@@ -39,10 +37,7 @@
 	onBeforeMount(async () => {
 		const route = useRoute()
 		const id = route.params.id
-		console.log('id in route ', id)
 
 		recipe.value = await getRecipe(id)
-		
-		// console.log(recipe.value)
 	})
 </script>

@@ -1,6 +1,6 @@
 <template>	
 
-	<div class="card w-4/5 bg-base-100 shadow-xl">
+	<div class="card w-4/5 h-80 bg-base-100 shadow-xl">
 	  <figure class="px-10 pt-10">
 	    <img :src="recipe.image" alt="" class="rounded-xl" />
 	  </figure>
@@ -14,27 +14,11 @@
 
 </template>
 
-<script>
-
-	export default {
-		name: 'RecipeCardSmall',
-		props: {
-			recipe: Object,
-		},
-		data() {
-			return {
-				buttonText: 'view',
-			}
-		},
-		components: {
-		},
-
-		created() {
-			console.log(this.recipe)
-		}
-
-
-
-	} 
+<script setup>
+	import { defineProps } from 'vue'
+	
+	const props = defineProps({
+		recipe: Object
+	})
 	
 </script>

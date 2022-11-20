@@ -25,9 +25,6 @@ class RecipeController extends Controller
                 'description' => ['nullable', 'max:255'],
                 'directions' => ['required'],
             ]);
-
-            
-
             // dd($request);
 
             $recipe = Recipe::create($attributes);
