@@ -19,6 +19,12 @@ class RecipeController extends Controller
 
         // include pivot table
 
+        if (!Auth::user()) {
+            return response(['message' => 'You must log in.'])
+        }
+
+        if (Auth::user)
+
         try {
             $attributes = $request->validate([
                 'title' => ['required', 'max:25', 'unique:recipes'],
@@ -114,8 +120,6 @@ class RecipeController extends Controller
             '1' => 'onion',
             '1 piece' => 'lettuce'
         ];
-
-        
 
         $recipe->name = 'hamburger';
 
