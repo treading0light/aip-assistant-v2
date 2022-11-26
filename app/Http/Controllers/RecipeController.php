@@ -19,11 +19,11 @@ class RecipeController extends Controller
 
         // include pivot table
 
-        if (!Auth::user()) {
-            return response(['message' => 'You must log in.'])
-        }
+        // if (!Auth::user()) {
+        //     return response(['message' => 'You must log in.'])
+        // }
 
-        if (Auth::user)
+        // if (Auth::user)
 
         try {
             $attributes = $request->validate([

@@ -21,7 +21,7 @@
 			<input type="text" name="email" placeholder="email" v-model="credentials.email">
 			<input type="password" name="password" placeholder="password" v-model="credentials.password">
 			<input type="password" name="passwordConfirm" placeholder="confirm password"
-			v-model="passwordConfirm" >
+			v-model="passwordConfirm">
 			<div>
 				<button class="btn btn-primary" @click="checkSubmit">Submit</button>
 				<button class="btn btn-primary" @click="action = 'login'">Existing User</button>
@@ -40,14 +40,14 @@
 	const store = useUserStore()
 
 	const confirmedPassword = ref(false)
-	const passwordConfirm = ref('')
+	const passwordConfirm = ref('password')
 	const message = ref(null)
 	const action = ref('login')
 	const csrf = ref(null)
 
 	const credentials = {
 		email: '',
-		password: '',
+		password: 'password',
 		name: ''
 	}
 
@@ -60,33 +60,42 @@
 		}
 	})
 
-	// const compare = () => {
-	// 	console.log('comparing')
-	// 	if (passwordConfirm === credentials.password) {
-	// 		confirmedPassword.value = true
-	// 	} else {
-	// 		confirmedPassword.value = false
-	// 	}
-	// } 
-
 	const updateUser = (data) => {
+		store.$reset
+		console.log('updating userStore')
 		store.$patch({
 			name: data.name,
 			userId: data.userId,
 			permission: data.permission,
 			loggedIn: true
 		})
+
+		console.log(store.name)
+	}
+
+	const buildForm = (formObject) => {
+		let formData = new FormData()
+		for (const key in formObject) {
+			formData.append(key, formObject[key])
+		}
+
+		return formData
 	}
 
 	const updateMessage = (msg) => message.value = msg
 
-	const checkSubmit = async () => {
+	const checkSubmit = () => {
+		let data = buildForm(credentials)
+
 		const settings = {
 			method: 'POST',
+
 			headers: {
+				'Content-Type': 'application/json',
 				'Accept': 'application/json',
 	            'X-CSRF-Token': csrf.value
 			},
+
 			body: JSON.stringify(credentials)
 		}
 
@@ -110,14 +119,14 @@
 	}
 
 	const submit = async (string, settings) => {
-		console.log('submitting')
-		let url = `/api/${string}/`
-		const res = await fetch(url, settings)
-		console.log(res)
-		// const data = await res.json()
-		// .then((data.message === 'success') ? updateUser(data) : updateMessage(data.message))
+		let url = `/api/user/${string}`
 
-		// (data.message === 'success') ? updateUser(data) : updateMessage(data.message)
+		const res = await fetch(url, settings)
+		.catch( error => console.log('error: ', error))
+
+		const data = await res.json()
+
+		.then(data => (data.message === 'success') ? updateUser(data.userData) : updateMessage(data.message))
 	}
 
 	onMounted(() => {

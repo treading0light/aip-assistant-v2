@@ -8,6 +8,7 @@ use App\Http\Controllers\IngredientController;
 use App\Http\Controllers\UserController;
 
 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,11 +20,10 @@ use App\Http\Controllers\UserController;
 |
 */
 
-Route::post('/login', [UserController::class, 'login']
-)->name('login');
+Route::post('/user/login', [UserController::class, 'login']
+);
 
-Route::post('/register', [UserController::class, 'register']
-)->name('register');
+Route::post('/user/register', [UserController::class, 'register']);
 
 Route::post('/recipe/create', [RecipeController::class, 'create'])->name('recipe.create');
 

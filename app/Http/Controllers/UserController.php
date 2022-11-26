@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Hash;
-use Session;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 
 use App\Models\User;
 
@@ -24,10 +24,18 @@ class UserController extends Controller
             return response(['message' => $message]);
         }
 
-        return response([
-            'message' => $message,
-            'userData' => $credentials
-        ]);
+        if (Auth::guard('web')->attempt($credentials)) {
+            $request->session()->regenerate();
+            
+            return response([
+                'message' => 'success',
+                'userData' => Auth::user()
+            ]);
+        } else {
+            return response([
+                'message' => 'login failed'
+            ]);
+        }
     }
 
     public function register(Request $request) {
@@ -44,18 +52,21 @@ class UserController extends Controller
             return json_encode($message);
         }
 
+        // return json_encode($credentials);
+
         $user = User::create([
-            'name' => $credentials->name,
-            'email' => $credentials->email,
-            'password' => Hash::make($credentials->password)
+            'name' => $credentials['name'],
+            'email' => $credentials['email'],
+            'password' => Hash::make($credentials['password'])
         ]);
 
-        if (Auth::attempt($credentials)) {
+        if (Auth::guard('web')->attempt($credentials)) {
             $request->session()->regenerate();
 
             return response(['message' => 'success', 'userData' => $user]);
+        } else {
+            return response(['message' => 'login error']);
         }
-
 
     }
 }
