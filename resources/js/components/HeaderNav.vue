@@ -1,43 +1,51 @@
 <template>
-	<div class="navbar bg-primary mb-10">
+	<div style="z-index: 10;" class="fixed top-0 navbar bg-base-200 mb-10 border-b border-b-2">
 
     <div class="flex-1 px-2 lg:flex-none">
-      <a class="text-2xl font-bold text-secondary">AIP <span class="text-primary-content">Assistant</span></a>
+      <router-link to="/" class="text-2xl font-bold text-secondary">AIP <span class="text-base-content">Assistant</span></router-link>
     </div> 
 
-    <div class="flex justify-end flex-1 px-2">
-      <div class="flex items-stretch">
+    <div class="flex justify-end w-full flex-1 px-2">
+      
+      <router-link to="/" class="btn btn-ghost rounded-btn">HOME</router-link>
 
-        <button @click="toggleLogin" class="btn btn-ghost rounded-btn text-primary-content">LOGIN</button>
+      <DropdownNav />
 
-        <router-link to="/" class="btn btn-ghost rounded-btn text-primary-content">HOME</router-link>
+      <DropdownUser v-if="user.name" :name="user.name" />
 
-        <div id="dropdown" class="dropdown dropdown-end">
-          <label tabindex="0" class="btn btn-ghost rounded-btn text-primary-content"
-          >Recipes</label>
-          <ul tabindex="0" class="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-52 mt-4 text-base">
-            <li><router-link to="/recipe/all">All Recipes</router-link></li>
-            <li><router-link to="/recipe/create">Create New</router-link></li>
-          </ul>
-        </div>
+      <button v-else @click="toggleLogin" class="btn btn-ghost rounded-btn justify-self-end">LOGIN/SIGN UP</button>
 
-      </div>
+      
     </div>
 
-    <LoginModal v-if="showLogin" />
+    <!-- <Teleport to="body"> -->
+      <Suspense>
+        <LoginModal v-if="showLogin" @closeModal="toggleLogin" />
+      </Suspense>
+  <!-- </Teleport> -->
   </div>
 	
 </template>
 
 <script setup>
-  import { ref } from 'vue'
+  import { ref, inject, onMounted } from 'vue'
   import LoginModal from './LoginModal.vue'
+  import DropdownNav from './DropdownNav.vue'
+  import DropdownUser from './DropdownUser.vue'
 
   const showLogin = ref(false)
+  const user = inject('userStore')
+  console.log(user.name)
+
+  const log = () => console.log('close')
 
   const toggleLogin = () => {
     if (showLogin.value == false) showLogin.value = true
     else showLogin.value = false
   }
+
+  onMounted(() => {
+    // console.log(user)
+  })
 
 </script>

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="flex flex-col items-center">
         <h1 class="text-3xl text-center mb-10">Recipe List</h1>
         <div class="w-10/12 flex flex-col items-center md:grid md:grid-cols-3 gap-y-5 place-items-center">
             

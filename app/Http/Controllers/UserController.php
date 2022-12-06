@@ -11,6 +11,18 @@ use App\Models\User;
 
 class UserController extends Controller
 {
+
+    public function get(Request $request) {
+        if (Auth::user()) {
+            return response([
+                'message' => 'success',
+                'userData' => Auth::user()
+            ]);
+        } else {
+            return response(['message' => 'no user logged in']);
+        }
+    }
+
     public function login(Request $request) {
         try {
             $credentials = $request->validate([
@@ -36,6 +48,19 @@ class UserController extends Controller
                 'message' => 'login failed'
             ]);
         }
+    }
+
+    public function logout(Request $request) {
+        try {
+            Auth::guard('web')->logout();
+
+        } catch (Throwable $e) {
+            $message = $e->getMessage();
+
+            return json_encode($message);
+        }
+
+        return response(['message' => 'logout successful.']);
     }
 
     public function register(Request $request) {

@@ -11,7 +11,10 @@
 			</ul>
 		</div>
 
-		<p>{{ recipe.directions }}</p>
+		<div>
+			<p v-for="line in recipe.directions">{{ line }}</p>
+		</div>
+		
 		
 
 	</div>
@@ -32,6 +35,14 @@
 		return data
 	}
 
+	const splitDirections = () => {
+		const string = recipe.value.directions
+
+		const splitDir = string.split(/\r?\n/).filter(el => el)
+		recipe.value.directions = splitDir
+		console.log(recipe.value.directions)
+	}
+
 	
 
 	onBeforeMount(async () => {
@@ -39,5 +50,12 @@
 		const id = route.params.id
 
 		recipe.value = await getRecipe(id)
+		// console.log(recipe.value.directions)
+		splitDirections()
+	})
+
+	onMounted(() => {
+		// console.log(recipe.value)
+		
 	})
 </script>
