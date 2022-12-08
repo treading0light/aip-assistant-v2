@@ -18,8 +18,14 @@
 
 				<input type="text" placeholder="Unit" v-model="ingredient.unit" class="input input-bordered w-1/6 text-2xl">
 			</li>
-
 		</ul>
+
+		<div v-if="subRecipes === true">
+			<ul v-for="subRecipe in subRecipes" :key="subRecipe.name">
+				<li v-for="ingredient in subRecipe.ingredients" :key="ingredient.id"></li>
+			</ul>
+			
+		</div>
 	</div>
 
 </template>
@@ -30,6 +36,7 @@
 	export default {
 		props: {
 			ingredients: Array,
+			subRecipes: Object,
 		},
 
 		data() {

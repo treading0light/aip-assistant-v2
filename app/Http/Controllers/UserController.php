@@ -13,7 +13,7 @@ class UserController extends Controller
 {
 
     public function get(Request $request) {
-        if (Auth::user()) {
+        if (isset(auth()->user())) {
             return response([
                 'message' => 'success',
                 'userData' => Auth::user()

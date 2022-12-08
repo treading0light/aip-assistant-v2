@@ -11,10 +11,16 @@ class Recipe extends Model
 
     protected $guarded = [];
 
+
     public function steps() {
 
         return $this->hasMany(Step::class);
 
+    }
+
+    public function subRecipes() {
+
+        return $this->hasMany(SubRecipe::class);
     }
 
     public function ingredients() {
