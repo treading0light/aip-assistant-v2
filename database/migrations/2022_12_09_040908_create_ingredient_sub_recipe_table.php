@@ -13,13 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('ingredient_recipe', function (Blueprint $table) {
+        Schema::create('ingredient_sub_recipe', function (Blueprint $table) {
             $table->id('id');
             $table->foreignId('ingredient_id');
-            $table->foreignId('recipe_id');
-            $table->string('qty')->nullable();
-            $table->string('unit')->nullable();
-            $table->string('sub_recipe')->nullable();
+            $table->foreignId('sub_recipe_id');
         });
     }
 
@@ -30,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ingredient_recipe');
+        Schema::dropIfExists('ingredient_sub_recipe');
     }
 };

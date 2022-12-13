@@ -18,4 +18,9 @@ class SubRecipe extends Model
         return $this->belongsTo(Recipe::class);
     }
 
+    public function ingredients() {
+        
+        return $this->belongsToMany(Ingredient::class);
+    }
+
 }

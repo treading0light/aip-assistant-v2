@@ -3,7 +3,7 @@
 	    <label tabindex="0" class="btn btn-ghost rounded-btn"
 	    >{{ name }}</label>
 	    <ul tabindex="0" class="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-52 mt-4 text-base">
-	      <li @click="logout">Logout</li>
+	      <li @click="logout" class="cursor-pointer">Logout</li>
 	    </ul>
 	  </div>
 </template>

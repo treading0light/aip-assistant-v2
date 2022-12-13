@@ -18,11 +18,11 @@
       
     </div>
 
-    <!-- <Teleport to="body"> -->
+    <Teleport to="body">
       <Suspense>
         <LoginModal v-if="showLogin" @closeModal="toggleLogin" />
       </Suspense>
-  <!-- </Teleport> -->
+  </Teleport>
   </div>
 	
 </template>

@@ -13,7 +13,7 @@ class UserController extends Controller
 {
 
     public function get(Request $request) {
-        if (isset(auth()->user())) {
+        if (auth()->user()) {
             return response([
                 'message' => 'success',
                 'userData' => Auth::user()
@@ -37,7 +37,7 @@ class UserController extends Controller
         }
 
         if (Auth::guard('web')->attempt($credentials)) {
-            $request->session()->regenerate();
+            // $request->session()->regenerate();
             
             return response([
                 'message' => 'success',

@@ -56,10 +56,8 @@
 	const passwordConfirm = ref('password')
 	const message = ref(null)
 	const action = ref('login')
-	// const tokenResponse = await fetch('sanctum/csrf-cookie')
 	const csrf = document.querySelector("meta[name='csrf-token']").getAttribute('content')
 	console.log(csrf)
-	// document.cookie = "tempCookie=I am a cookie"
 
 	const credentials = {
 		email: '',
@@ -107,7 +105,7 @@
 			method: 'POST',
 
 			headers: {
-				// credentials: 'same-origin',
+				credentials: 'same-origin',
 				'Content-Type': 'application/json',
 				'Accept': 'application/json',
 				// "X-Requested-With": "XMLHttpRequest",

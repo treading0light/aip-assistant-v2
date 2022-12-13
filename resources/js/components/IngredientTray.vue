@@ -1,13 +1,10 @@
 <template>
-	<!-- component intended for two uses, one to display
-	all available ingredients, and one to display chosen ingredients
-	for newly created recipe -->
 
-	<div class="relative rounded">
-
-		<h2 class="font-bold pb-3">Ingredients:</h2>
+	<div class="relative rounded flex flex-col">
 
 		<ul>
+			<h2 @click="makeTarget('main', $event)" class="font-bold mb-3 px-3 cursor-pointer border-l-secondary rounded-lg">Ingredients:</h2>
+
 			<li v-for="ingredient in ingredients" :key="ingredient.id" class="flex gap-5">
 				<p class="hover:cursor-pointer" @click="remove(ingredient.id)">{{ ingredient.name }}
 				</p>
@@ -20,47 +17,70 @@
 			</li>
 		</ul>
 
-		<div v-if="subRecipes === true">
-			<ul v-for="subRecipe in subRecipes" :key="subRecipe.name">
-				<li v-for="ingredient in subRecipe.ingredients" :key="ingredient.id"></li>
+
+			<ul v-for="(subRecipe, name) in subRecipes" :key="name" :id="name">
+				<h2 @click="makeTarget(name, $event)" class="font-bold mb-3 px-3 cursor-pointer border-l-secondary rounded-lg">{{ name }}:</h2>
+				<li v-for="ingredient in subRecipe" :key="ingredient.id"></li>
 			</ul>
 			
-		</div>
+
+		<input type="text" name="subRecipe" placeholder="Add sub-recipe" class="w-fit" v-if="subRecipeInput !== null" v-model="subRecipeInput" @keyup.enter="addSubRecipe">
+
+		<button @click="subRecipeInput = ''" v-if="subRecipeInput === null" class="btn btn primary w-fit">ADD SUB-RECIPE</button>
 	</div>
 
 </template>
 
-<script>
+
+<script setup>
 	import InfoModal from './InfoModal.vue'
+	import { ref, watch, toRef, computed } from 'vue'
 
-	export default {
-		props: {
-			ingredients: Array,
-			subRecipes: Object,
-		},
+	const props = defineProps({
+		ingredients: Array,
+		target: String
+	})
 
-		data() {
-			return {
-				
-			}
-		},
-		
-		methods: {
-			remove: function (id) {
-				this.$emit('ingredient-to-pantry', id)
-				console.log('tray: ' + id)
-			}
-		},
+	const emit = defineEmits(['ingredient-to-pantry', 'makeTarget'])
 
-		components: {
-			InfoModal
-		},
+	const subRecipeInput = ref(null)
 
-		mounted() {
-			// console.log('tray array: ' + this.ingredients)
-		},
+	const subRecipes = ref({
+		'for the soup': []
+	})
+
+	// const mainIngredients = computed(() => props.ingredients.map((item) => item.subRecipe === 'main'))
+	const mainIngredients = props.ingredients.filter(item => item.subRecipe === 'main')
+	const computedMain = computed(() => props.ingredients.filter(item => item.subRecipe === 'main'))
+
+	const addIngredient = (ingredient, target) => {
+		if (target === 'main') {
+			mainIngredients.push(ingredient)
+		} else {
+			subRecipes[target].push(ingredient)
+		}
 	}
-</script>
 
-<style scoped>
-</style>
+	const addSubRecipe = () => {
+		subRecipes.value[subRecipeInput.value] = computed(() => props.ingredients.map( item => item.subRecipe === subRecipeInput.value))
+
+		console.log(subRecipes.value)
+		subRecipeInput.value = null
+		
+	}
+
+	const makeTarget = (target, event) => {
+		const targetList = document.querySelectorAll('ul > h2')
+		targetList.forEach((node) => node.classList.remove('border-l-4'))
+		event.target.classList.add('border-l-4')
+		emit('makeTarget', target)
+		console.log('mainIngredients ', computedMain.value)
+	}
+
+
+
+	
+
+	const remove = (id) => emit('ingredient-to-pantry', id)
+	
+</script>

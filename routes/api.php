@@ -23,7 +23,7 @@ use App\Http\Controllers\UserController;
 Route::post('/user/login', [UserController::class, 'login']
 );
 
-Route::get('/user/get', [UserController::class, 'get']
+Route::middleware('auth:sanctum')->get('/user/get', [UserController::class, 'get']
 );
 
 Route::post('/user/register', [UserController::class, 'register']);
