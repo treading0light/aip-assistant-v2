@@ -25,7 +25,13 @@
 
 		<div class="w-full flex justify-around mb-10">
 
-			<ingredient-tray @makeTarget="makeTarget" @ingredient-to-pantry="ingredientToPantry" :ingredients="chosenIngredients"></ingredient-tray>
+			<div class="flex flex-col">
+				<ingredient-tray 
+				v-for="group in chosenIngredients"
+				@makeTarget="makeTarget" 
+				@ingredient-to-pantry="ingredientToPantry" 
+				:ingredients="group"></ingredient-tray>
+			</div>
 
 			<pantry @ingredient-to-recipe="ingredientToRecipe"
 			@create-ingredient-modal="createIngredientModal"
@@ -72,7 +78,7 @@
 
 	let title = ref('')
 	let description = ref('')
-	const chosenIngredients = ref([])
+	const chosenIngredients = ref({})
 	const subRecipes = ref({})
 	let image = ref(null)
 	let directions = ref('')
