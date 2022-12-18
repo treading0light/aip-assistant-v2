@@ -20,16 +20,6 @@
 		    <button class="btn btn-primary" @click="postIngredient">Submit</button>
 	    </div>
 	</div>
-
-
-	<!-- <div class="absolute rounded-xl p-16 m-auto bg-base-200">
-
-		<input type="text" v-model="ingredient.name" placeholder="Name">
-		<input type="text" v-model="ingredient.description" placeholder="Details">
-		<button @click="postIngredient">Submit</button>
-
-		
-	</div> -->
 	
 </template>
 
@@ -91,5 +81,8 @@
 <style scoped>
 	#modal {
 		z-index: 10003;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
 	}
 </style>

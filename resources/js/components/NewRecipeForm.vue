@@ -26,11 +26,20 @@
 		<div class="w-full flex justify-around mb-10">
 
 			<div class="flex flex-col">
+				<h2 class="underline font-bold mb-5">Ingredients:</h2>
+
 				<ingredient-tray 
 				v-for="group in chosenIngredients"
 				@makeTarget="makeTarget" 
 				@ingredient-to-pantry="ingredientToPantry" 
-				:ingredients="group"></ingredient-tray>
+				:ingredients="group.ingredients"
+				:subRecipe="group.name"
+				:isActive="group.isActive"></ingredient-tray>
+
+				<input type="text" name="subRecipe" placeholder="Add sub-recipe" class="w-fit" 
+				v-if="subRecipeInput !== null" v-model="subRecipeInput" @keyup.enter="addSubRecipe">
+
+				<button @click="subRecipeInput = ''" v-if="subRecipeInput === null" class="btn btn-primary w-fit">ADD SUB-RECIPE</button>
 			</div>
 
 			<pantry @ingredient-to-recipe="ingredientToRecipe"
@@ -78,7 +87,6 @@
 
 	let title = ref('')
 	let description = ref('')
-	const chosenIngredients = ref({})
 	const subRecipes = ref({})
 	let image = ref(null)
 	let directions = ref('')
@@ -89,37 +97,64 @@
 	const target = ref('main')
 	const pictureInput = ref(null)
 
+	const subRecipeInput = ref(null)
+
 	const csrf = document.querySelector("meta[name='csrf-token']").getAttribute('content')
 
 	const pantryIngredients = ref([
-						{
-							'id': 1,
-							'name': 'ground beef'
-						},
-						{
-							'id': 2,
-							'name': 'bread'
-						},
-						{
-							'id': 3,
-							'name': 'cheese'
-						},
-					])
+		{
+			'id': 1,
+			'name': 'ground beef'
+		},
+		{
+			'id': 2,
+			'name': 'bread'
+		},
+		{
+			'id': 3,
+			'name': 'cheese'
+		},
+	])
+	const chosenIngredients = ref([
+		{
+			name: 'main',
+			ingredients: [],
+			isActive: true
+		},
+	])
 
-	const makeTarget = (target) => {	
-		target.value = target
-		console.log(target)
+	const makeTarget = (subRecipe) => {	
+		for (let obj of chosenIngredients.value) obj.isActive = false
+		let group = chosenIngredients.value.find(obj => obj.name === subRecipe)
+		group.isActive = true
+		target.value = subRecipe
+		console.log(target.value)
+	}
+
+	const addSubRecipe = () => {
+		let sr = {
+			name: subRecipeInput.value,
+			ingredients: [],
+			isActive: false
+		}
+
+		chosenIngredients.value.push(sr)
+		subRecipeInput.value = null
 	}
 
 	const ingredientToRecipe = (id) => {
 
-		let ingredient = pantryIngredients.value.filter(obj => obj.id == id)
+		let ingredient = pantryIngredients.value.find(obj => obj.id == id)
 
 		removeIngredient(id, pantryIngredients.value)
 
 		ingredient.subRecipe = target.value
 
-		chosenIngredients.value.push(ingredient[0])
+		let chosenGroup = chosenIngredients.value.find(obj => obj.name == target.value)
+
+		chosenGroup.ingredients.push(ingredient)
+
+		// chosenIngredients.value[target.value].ingredients.push(ingredient[0])
 
 		// if (!ingredient[0].subRecipe) {
 		// 	console.log('not')
@@ -127,23 +162,22 @@
 
 		console.log('ing subRecipe: ', ingredient.subRecipe)
 
-		console.log('choose ingredient: ' + ingredient[0].subRecipe)
+		console.log('choose ingredient: ' + ingredient.subRecipe)
 	}
 
 	const ingredientToPantry = (id) => {
-		const ingredient = chosenIngredients.value.filter(obj => obj.id == id)
+		// remove ingredient from the recipe and return to pantry array
 
-		removeIngredient(id, chosenIngredients.value)
+		const ingredient = chosenIngredients.value.flatMap(group => group.ingredients).find(obj => obj.id == id)
+		let group = chosenIngredients.value.find(obj => obj.ingredients.includes(ingredient))
 
-		pantryIngredients.value.push(ingredient[0])
-		
-		console.log('removeIngredient ' + ingredient)
+		removeIngredient(ingredient, group.ingredients)
+		pantryIngredients.value.push(ingredient)
 	}
 
-	const removeIngredient = (id, arr) => {
-		let index = arr.findIndex(object => 
-			object.id === id
-		)
+	const removeIngredient = (ingredient, arr) => {
+
+		let index = arr.indexOf(ingredient)
 
 		arr.splice(index, 1)
 	}
@@ -151,11 +185,10 @@
 	const fetchIngredients = async () => {
 		// populate pantry with ingredients from DB
 
-		await fetch('/api/ingredients')
-		.then(res => res.json())
-		.then(json => pantryIngredients.value = json)
+		let response = await fetch('/api/ingredients')
+		let data = await response.json()
 
-		// console.log(this.pantryIngredients)
+		pantryIngredients.value = data
 	}
 
 	const createIngredientModal = (search) => {
