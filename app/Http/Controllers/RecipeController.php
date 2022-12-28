@@ -49,7 +49,8 @@ class RecipeController extends Controller
                 $ingredient = Ingredient::find($ing->id);
 
                 // define relationship of each ingredient by adding them to their pivot table
-                $recipe->ingredients()->attach($ingredient, ['qty' => $ing->qty, 'unit' => $ing->unit]);
+                $recipe->ingredients()->attach($ingredient,
+                    ['qty' => $ing->qty, 'unit' => $ing->unit, 'sub_recipe' => $ing->subRecipe]);
             };
 
             $message = 'success: ' . $recipe->id;
@@ -91,10 +92,12 @@ class RecipeController extends Controller
                     foreach ($res['ingredients'] as $ingredient) {
 
                         $pivot = $ingredient['pivot'];
-                        unset($ingredient['pivot']);
 
                         $ingredient['qty'] = $pivot['qty'];
                         $ingredient['unit'] = $pivot['unit'];
+                        $ingredient['sub_recipe'] = $pivot['sub_recipe'];
+
+                        unset($ingredient['pivot']);
 
                         array_push($ingredients, $ingredient);
                     }

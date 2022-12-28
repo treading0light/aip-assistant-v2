@@ -12,6 +12,7 @@
 		</div>
 
 		<div id="form" class="flex flex-col items-center justify-center gap-2 bg-white py-5 h-full w-1/2">
+			
 			<div v-if="message" class="text-red-400">
 				<p>{{ message }}</p>
 			</div>
@@ -48,7 +49,7 @@
 </template>
 
 <script setup>
-	import { ref, watch, onMounted, inject } from 'vue'
+	import { ref, watch, inject } from 'vue'
 
 	const store = inject('userStore')
 
@@ -105,7 +106,8 @@
 			method: 'POST',
 
 			headers: {
-				credentials: 'same-origin',
+				'credentials': 'same-origin',
+				'origin': 'same-origin',
 				'Content-Type': 'application/json',
 				'Accept': 'application/json',
 				// "X-Requested-With": "XMLHttpRequest",
@@ -135,7 +137,8 @@
 	}
 
 	const submit = async (string, settings) => {
-		let url = window.location.origin + `/api/user/${string}`
+		let url = window.location.origin + `/api/${string}`
+		// let url = `/api/${string}`
 
 		const res = await fetch(url, settings)
 		.catch( error => console.log('error: ', error))
@@ -146,7 +149,4 @@
 
 		emit('closeModal')
 	}
-
-	onMounted(() => {
-	})
 </script>

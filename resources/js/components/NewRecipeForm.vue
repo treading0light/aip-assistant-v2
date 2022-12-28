@@ -143,6 +143,7 @@
 	}
 
 	const ingredientToRecipe = (id) => {
+		console.log('ing to pantry id ', id)
 
 		let ingredient = pantryIngredients.value.find(obj => obj.id == id)
 
@@ -160,9 +161,9 @@
 		// 	console.log('not')
 		// }
 
-		console.log('ing subRecipe: ', ingredient.subRecipe)
+		// console.log('ing subRecipe: ', ingredient.subRecipe)
 
-		console.log('choose ingredient: ' + ingredient.subRecipe)
+		// console.log('choose ingredient: ' + ingredient.subRecipe)
 	}
 
 	const ingredientToPantry = (id) => {
@@ -175,9 +176,9 @@
 		pantryIngredients.value.push(ingredient)
 	}
 
-	const removeIngredient = (ingredient, arr) => {
+	const removeIngredient = (id, arr) => {
 
-		let index = arr.indexOf(ingredient)
+		let index = arr.indexOf(arr.find(obj => obj.id === id))
 
 		arr.splice(index, 1)
 	}
@@ -278,7 +279,7 @@
     const getReqIngredients = () => {
     	// map ingredient ids with pivot table attributes
 
-    	return chosenIngredients.value.map(i => {
+    	return chosenIngredients.value.flatMap(obj => obj.ingredients).map(i => {
 
     		// set some default values
     		if (!i.qty) {
@@ -289,10 +290,15 @@
     			i.unit = 'N/A'
     		}
 
+    		if (!i.subRecipe) {
+    			i.subRecipe = 'main'
+    		}
+
     		return {
     			id: i.id,
     			qty: i.qty,
-    			unit: i.unit
+    			unit: i.unit,
+    			subRecipe: i.subRecipe
     		}
 		})
     }

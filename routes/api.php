@@ -20,13 +20,19 @@ use App\Http\Controllers\UserController;
 |
 */
 
-Route::post('/user/login', [UserController::class, 'login']
+Route::post('/login', [UserController::class, 'login']
 );
 
 Route::middleware('auth:sanctum')->get('/user/get', [UserController::class, 'get']
 );
 
-Route::post('/user/register', [UserController::class, 'register']);
+Route::get('/logout', [UserController::class, 'logout']
+);
+
+// Route::middleware('auth:sanctum')->get('/user/get', [UserController::class, 'get']
+// );
+
+Route::post('/register', [UserController::class, 'register']);
 
 Route::post('/recipe/create', [RecipeController::class, 'create'])->name('recipe.create');
 

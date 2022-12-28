@@ -18,15 +18,10 @@ class Recipe extends Model
 
     }
 
-    public function subRecipes() {
-
-        return $this->hasMany(SubRecipe::class);
-    }
-
     public function ingredients() {
         
         return $this->belongsToMany(Ingredient::class)
-        ->withPivot(['qty', 'unit']);
+        ->withPivot(['qty', 'unit', 'sub_recipe']);
     }
 
     public function category() {

@@ -13,14 +13,20 @@ class UserController extends Controller
 {
 
     public function get(Request $request) {
-        if (auth()->user()) {
-            return response([
-                'message' => 'success',
-                'userData' => Auth::user()
-            ]);
-        } else {
-            return response(['message' => 'no user logged in']);
-        }
+        // dd(Auth::guard('web')->user());
+        $session = session()->all();
+        // var_dump($session);
+
+        // try {
+        //     $user = Auth::guard('web')->user();
+        // } catch (Throwable $e) {
+        //     return response(['message' => $e->getMessage()]);
+        // }
+
+        // return response([
+        //     'message' => 'success',
+        //     'userData' => Auth::user()
+        // ]);
     }
 
     public function login(Request $request) {
@@ -37,7 +43,8 @@ class UserController extends Controller
         }
 
         if (Auth::guard('web')->attempt($credentials)) {
-            // $request->session()->regenerate();
+
+            $request->session()->regenerate();
             
             return response([
                 'message' => 'success',
@@ -85,8 +92,9 @@ class UserController extends Controller
             'password' => Hash::make($credentials['password'])
         ]);
 
+        $request->session()->regenerate();
+
         if (Auth::guard('web')->attempt($credentials)) {
-            $request->session()->regenerate();
 
             return response(['message' => 'success', 'userData' => $user]);
         } else {

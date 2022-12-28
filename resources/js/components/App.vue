@@ -26,11 +26,26 @@
 		console.log(store.name)
 	}
 
-	onMounted(async () => {
-		const res = await fetch('/api/user/get')
-		console.log(res)
+	const fetchUser = async () => {
+		const settings = {
+			method: 'GET',
+
+			headers: {
+				credentials: 'include',
+				'origin': 'same-origin',
+				'Content-Type': 'application/json',
+				'Accept': 'application/json',
+			}
+		}
+
+		const res = await fetch('/api/user/get', settings)
+		console.log('fetchUser res ', res)
 		const data = await res.json()
-		console.log(data)
+		console.log('fetchUser data ', data)
+	}
+
+	onMounted(() => {
+		fetchUser()
 
 	})
 </script>

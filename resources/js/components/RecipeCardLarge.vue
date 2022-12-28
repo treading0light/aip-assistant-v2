@@ -35,6 +35,10 @@
 		return data
 	}
 
+	const devideIngredients = (array) => {
+
+	}
+
 	const splitDirections = () => {
 		const string = recipe.value.directions
 
