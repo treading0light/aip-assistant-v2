@@ -83,7 +83,9 @@
 	import IngredientModal from './IngredientModal.vue'
 	import PictureInput from './PictureInput.vue'
 
-	import { ref, onMounted } from 'vue'
+	import { ref, onMounted, inject } from 'vue'
+
+	const supabase = inject('supabase')
 
 	let title = ref('')
 	let description = ref('')
@@ -186,10 +188,18 @@
 	const fetchIngredients = async () => {
 		// populate pantry with ingredients from DB
 
-		let response = await fetch('/api/ingredients')
-		let data = await response.json()
+		// let response = await fetch('/api/ingredients')
+		// let data = await response.json()
 
-		pantryIngredients.value = data
+		let { data, error } = await supabase
+		.from('ingredients')
+		.select('*')
+
+		if (error) {
+			console.log(error)
+		} else {
+			pantryIngredients.value = data
+		}
 	}
 
 	const createIngredientModal = (search) => {
@@ -228,50 +238,66 @@
     const postRecipe = async () => {
 	// including 'Content-Type' breaks the POST request
 
-	const data = await buildForm()
+	const stuff = await buildForm()
 
-	console.log(data)
+	let { data, error } = await supabase
+	.from('recipes')
+	.insert([stuff])
 
-	const response = await fetch('/api/recipe/create', {
+	if (error) {
+		console.error(error)
+	} else {
+		console.log(data)
+	}
 
-		method: 'POST',
+	// console.log(data)
 
-		headers: {
-		    'Accept': 'application/json',
-			'X-CSRF-Token': csrf
-		},
+	// const response = await fetch('/api/recipe/create', {
 
-		body: data
+	// 	method: 'POST',
 
-		})
-		.then(res => res.json())
-		.catch(error => console.error('error: ' + error))
+	// 	headers: {
+	// 	    'Accept': 'application/json',
+	// 		'X-CSRF-Token': csrf
+	// 	},
+
+	// 	body: data
+
+	// 	})
+	// 	.then(res => res.json())
+	// 	.catch(error => console.error('error: ' + error))
 		
-		console.log(response)
+	// 	console.log(response)
     }
 
     const buildForm = () => {
 
-    	const data = new FormData()
+    	const data = {
+    		title: title.value,
+    		description: description.value,
+    		directions: directions.value
+    	}
 
-    	data.append('title', title.value)
-    	console.log('title ', title.value)
-    	data.append('description', description.value)
-    	data.append('directions', directions.value)
+    	// const data = new FormData()
 
-    	const ingredients = getReqIngredients()
+    	// data.append('title', title.value)
+    	// console.log('title ', title.value)
+    	// data.append('description', description.value)
+    	// data.append('directions', directions.value)
 
-    	console.log('ingredients: ' + JSON.stringify(ingredients))
+    	// const ingredients = getReqIngredients()
 
-    	for (var i = ingredients.length - 1; i >= 0; i--) {
-    		console.log('adding ' + JSON.stringify(ingredients[i]))
+    	// console.log('ingredients: ' + JSON.stringify(ingredients))
+
+    	// for (var i = ingredients.length - 1; i >= 0; i--) {
+    	// 	console.log('adding ' + JSON.stringify(ingredients[i]))
     		
-    		data.append('ingredients[]', JSON.stringify(ingredients[i]))
-    	}
+    	// 	data.append('ingredients[]', JSON.stringify(ingredients[i]))
+    	// }
 
-    	if (image.value) {
-    		data.append('image', image.value)
-    	}
+    	// if (image.value) {
+    	// 	data.append('image', image.value)
+    	// }
 
     	return data
     }

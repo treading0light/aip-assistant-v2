@@ -23,7 +23,7 @@
 	
 </template>
 
-<script>
+<!-- <script>
 	export default {
 		props: {
 			searchText: String,
@@ -64,6 +64,10 @@
 				
 			},
 
+			postIngredient: async function() {
+
+			},
+
 			cancel: function () {
 				this.ingredient = {}
 
@@ -76,6 +80,38 @@
 		},
 	}
 	
+</script> -->
+
+<script setup>
+	import useSupaBase from '@/composables/UseSupaBase'
+	import { ref, onMounted, inject } from 'vue'
+
+	const supabase = inject('supabase')
+	console.log(supabase)
+
+	const props = defineProps({
+		searchText: String
+	})
+
+	const emit = defineEmits(['cancel-ingredient'])
+
+	let ingredient = ref({})
+
+	const postIngredient = async () => {
+		const { error } = await supabase
+		.from('ingredients')
+		.insert([ingredient.value])
+	}
+
+	const cancel = () => {
+		ingredient.value = {}
+
+		emit('cancel-ingredient')
+	}
+
+	onMounted(() => {
+		ingredient.value.name = props.searchText
+	})
 </script>
 
 <style scoped>

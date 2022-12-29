@@ -10,8 +10,12 @@
 	import HeaderNav from './HeaderNav.vue'
 	import { useUserStore } from '../stores/UserStore'
 	import { ref, provide, onMounted } from 'vue'
+	import useSupaBase from '@/composables/UseSupaBase'
 
 	provide('userStore', useUserStore())
+
+	// const supabase = useSupaBase()
+	provide('supabase', useSupaBase())
 
 	const updateUser = (data) => {
 		store.$reset
@@ -31,8 +35,8 @@
 			method: 'GET',
 
 			headers: {
-				credentials: 'include',
-				'origin': 'same-origin',
+				credentials: 'same-origin',
+				// 'origin': 'same-origin',
 				'Content-Type': 'application/json',
 				'Accept': 'application/json',
 			}
@@ -44,8 +48,9 @@
 		console.log('fetchUser data ', data)
 	}
 
-	onMounted(() => {
-		fetchUser()
+	onMounted(async () => {
+		await fetch('/sanctum/csrf-cookie')
+		// fetchUser()
 
 	})
 </script>

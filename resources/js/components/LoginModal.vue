@@ -51,14 +51,16 @@
 <script setup>
 	import { ref, watch, inject } from 'vue'
 
+	const supabase = inject('supabase')
+
 	const store = inject('userStore')
 
 	const confirmedPassword = ref(false)
 	const passwordConfirm = ref('password')
 	const message = ref(null)
 	const action = ref('login')
-	const csrf = document.querySelector("meta[name='csrf-token']").getAttribute('content')
-	console.log(csrf)
+	// const csrf = document.querySelector("meta[name='csrf-token']").getAttribute('content')
+	// console.log(csrf)
 
 	const credentials = {
 		email: '',
@@ -106,12 +108,11 @@
 			method: 'POST',
 
 			headers: {
-				'credentials': 'same-origin',
-				'origin': 'same-origin',
+				credentials: 'same-origin',
+				// 'origin': 'same-origin',
 				'Content-Type': 'application/json',
 				'Accept': 'application/json',
 				// "X-Requested-With": "XMLHttpRequest",
-	            'X-CSRF-Token': csrf
 			},
 
 			body: JSON.stringify(credentials)
@@ -137,15 +138,28 @@
 	}
 
 	const submit = async (string, settings) => {
-		let url = window.location.origin + `/api/${string}`
-		// let url = `/api/${string}`
+		// const cookie = await fetch('/sanctum/csrf-cookie')
+		// console.log(cookie)
+		// let url = window.location.origin + `/api/${string}`
+		// // let url = `/api/${string}`
 
-		const res = await fetch(url, settings)
-		.catch( error => console.log('error: ', error))
+		// const res = await fetch(url, settings)
+		// .catch( error => console.log('error: ', error))
 
-		const data = await res.json()
+		// const data = await res.json()
 
-		.then(data => (data.message === 'success') ? updateUser(data.userData) : updateMessage(data.message))
+		// .then(data => (data.message === 'success') ? updateUser(data.userData) : updateMessage(data.message))
+
+
+		if (string == 'register') {
+			let { data, error } = await supabase.auth.signUp(credentials)
+			if (error) {
+				console.log(error)
+			} else {
+				console.log(data)
+			}
+		}
+
 
 		emit('closeModal')
 	}
